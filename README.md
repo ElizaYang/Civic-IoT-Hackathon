@@ -9,7 +9,7 @@ Report & Stop is a web application that solves under-reported sexual harassment 
 For more information, please watch our Youtube presentation demo(Youtube video) and see our presentation (in pdf format).
 
 ### Project Detail
-- Demo: 硕南你能把demo视频上传Youtube， view public 然后把url放这里吗？
+- Demo: https://youtu.be/Ki0lqYUUfJ8
 
 ### Team Members
 - [Ailin Zhang] (https://www.linkedin.com/in/ailinzhang68/)
