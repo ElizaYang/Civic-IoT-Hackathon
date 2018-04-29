@@ -1,5 +1,5 @@
 # AT&T IoT Civic Hackathon - Indianapolis
-## Project Title: Rest & Stop, a sexual harassment reporting data analysis web application
+## Project Title: Report & Stop, a sexual harassment reporting data analysis web application
 This project was designed to compete for the 3rd annual AT&T IoT Civic Hackathon hosted at Indianapolis on April 20th, 2018. There was over 1100 hackathon participants, and over 40 teams registered. This team was one of the final 12 teams, won the second place in data analysis, and was awarded $1000 Amazon gift card dollar prize.
 
 ### Project Description
