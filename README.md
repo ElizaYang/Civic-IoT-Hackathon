@@ -19,6 +19,7 @@ For more information, please watch our Youtube presentation demo(Youtube video) 
 
 ### More About Hackathon Event
 - Final 12 Teams Presentation Recording: (48 min 44 s) (https://www.facebook.com/IN.COMMS/videos/2092814154069287/UzpfSTU5NTQ5NjIwMDQ2Nzc2NDoyMDk1MTQzMDczODM2Mzk1/)
+- Picture of Winning Teams: (https://twitter.com/LaunchFishers/status/987893821588561925)
 - Event Blog: (https://developer.att.com/blog/2018-iot-civic-hackathon)
 - Event Detail: (https://www.eventbrite.com/e/att-iot-civic-hackathon-indianapolis-tickets-41343804432#)
 - Twitter: https://twitter.com/hashtag/atthack?lang=en
