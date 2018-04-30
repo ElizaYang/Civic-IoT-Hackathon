@@ -1,6 +1,6 @@
 # AT&T IoT Civic Hackathon - Indianapolis
 ## Project Title: Report & Stop, a sexual harassment reporting data analysis web application
-This project was designed to compete for the 3rd annual AT&T IoT Civic Hackathon hosted at Indianapolis on April 20th, 2018. There was over 1100 hackathon participants, and over 40 teams registered. This team was one of the final 12 teams, won the second place in data analysis, and was awarded $1000 Amazon gift card dollar prize.
+This project was designed to compete for the 3rd annual AT&T IoT Civic Hackathon hosted at Indianapolis on April 20th, 2018. There was over 600 developers, and over 40 teams registered. This team was one of the final 12 teams, won the second place in data analysis, and was awarded $1000 Amazon gift card dollar prize.
 
 ### Project Description
 
@@ -18,9 +18,21 @@ For more information, please watch our Youtube presentation demo(Youtube video) 
 - [Ralph (Kuangyi) Zhang] (https://www.linkedin.com/in/kuangyizhang/)
 
 ### More About Hackathon Event
-- Final 12 Teams Presentation Recording: (48 min 44 s) (https://www.facebook.com/IN.COMMS/videos/2092814154069287/UzpfSTU5NTQ5NjIwMDQ2Nzc2NDoyMDk1MTQzMDczODM2Mzk1/)
-- Picture of Winning Teams: (https://twitter.com/LaunchFishers/status/987893821588561925)
-- Event Blog: (https://developer.att.com/blog/2018-iot-civic-hackathon)
-- Event Detail: (https://www.eventbrite.com/e/att-iot-civic-hackathon-indianapolis-tickets-41343804432#)
-- Twitter: https://twitter.com/hashtag/atthack?lang=en
+- Government Technology Magazine overview of the hackathon and winning application:
+  http://www.govtech.com/data/IoT-Civic-Hackathon-Convenes-Developers-First-Responders-Around-Public-Safety-FirstNet-Solutions.html
+  
+- Final 12 Teams Presentation Recording: (48 min 44 s is our team)
+  https://www.facebook.com/IN.COMMS/videos/2092814154069287/UzpfSTU5NTQ5NjIwMDQ2Nzc2NDoyMDk1MTQzMDczODM2Mzk1/
+  
+- Picture of Winning Teams: 
+  https://twitter.com/LaunchFishers/status/987893821588561925
+
+- Event Blog: 
+  https://developer.att.com/blog/2018-iot-civic-hackathon
+  
+- Event Detail:  
+  https://www.eventbrite.com/e/att-iot-civic-hackathon-indianapolis-tickets-41343804432#
+  
+- Twitter: 
+  https://twitter.com/hashtag/atthack?lang=en
 
