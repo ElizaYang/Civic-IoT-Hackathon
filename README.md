@@ -18,7 +18,7 @@ For more information, please watch our Youtube presentation demo(Youtube video) 
 - [Ralph (Kuangyi) Zhang] (https://www.linkedin.com/in/kuangyizhang/)
 
 ### More About Hackathon Event
-- Government Technology Magazine overview of the hackathon and winning application:
+- News on Government Technology Magazine about the Hackathon and Winning Application Overview:
   http://www.govtech.com/data/IoT-Civic-Hackathon-Convenes-Developers-First-Responders-Around-Public-Safety-FirstNet-Solutions.html
   
 - Final 12 Teams Presentation Recording: (48 min 44 s is our team)
