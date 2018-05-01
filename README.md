@@ -1,6 +1,6 @@
 # AT&T IoT Civic Hackathon - Indianapolis
 ## Project Title: Report & Stop, a sexual harassment reporting data analysis web application
-This project was designed to compete for the 3rd annual AT&T IoT Civic Hackathon hosted at Indianapolis on April 20th, 2018. There were over 1100 event participants, 600 developers, and over 40 teams registered. This team was one of the final 12 teams, second place winner, and was awarded $1000 Amazon gift card dollar prize for best use of data analysis and visulization.
+This project was designed to compete for the 3rd annual AT&T IoT Civic Hackathon hosted at Indianapolis on April 20th, 2018. There were over 1100 event participants, 600 developers, and over 40 teams registered. This team was one of the final 12 teams, second place winner, and was awarded $1000 Amazon gift card prize for best use of data analysis and visualization.
 
 ### Project Description
 
