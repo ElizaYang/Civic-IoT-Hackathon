@@ -33,7 +33,8 @@ public class Login extends HttpServlet {
 			boolean isUserFound = LoginValidate.searchUserInDb(param1, param2);
 			if(isUserFound) {		
 				// if found, direct to new page
-				req.getRequestDispatcher("/policeDashboard.jsp").forward(req, resp);
+//				req.getRequestDispatcher("/policeDashboard.jsp").forward(req, resp);
+				resp.sendRedirect(req.getContextPath()+"/listRecords");
 				
 //				req.getRequestDispatcher("/listRecords.jsp").forward(req, resp);
 			} else {
