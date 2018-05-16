@@ -23,7 +23,11 @@
 
 <body class="container-fluid">
 	<!-- Body -->
-	
+	<h2 class="text-primary text-center">All sexual harassments records</h2>
+
+	<a href="<c:url value="policeDashboard.jsp"></c:url>">
+				<button id="submit_btn" class="btn btn-secondary btn-sm">
+					Back to dashboard</button></a>	<div>&nbsp;</div>
 	<!-- Searching -->
 	<div>
 		<table>
@@ -40,12 +44,14 @@
 				</tr>
 			</tbody>
 		</table>
+		
+		
 	</div>
-
-
+	
+	<div>&nbsp;</div>
 	<!-- Result display -->
 	<div>
-	<h2 class="text-primary text-center">All sexual harassments records</h2>
+	
 		<table class="table table-striped">
 			<tbody>
 

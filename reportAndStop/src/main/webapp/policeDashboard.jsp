@@ -1,102 +1,346 @@
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-	pageEncoding="UTF-8"%>
-<%@ page import="java.util.*,java.sql.*"%>
-<%@ page import="com.google.gson.Gson"%>
-<%@ page import="com.google.gson.JsonObject"%>
+<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
+	pageEncoding="ISO-8859-1"%>
+<%@ page import="com.mongodb.*"%>
+<%@ page import="com.mongodb.client.MongoCollection"%>
+<%@ page import="com.mongodb.client.MongoDatabase"%>
+<%@ page import="com.mongodb.client.MongoCursor"%>
+<%@ page import="com.mongodb.client.FindIterable"%>
+<%@ page import="com.mongodb.client.AggregateIterable"%>
+<%@ page import="com.reportAndStop.mongoDB.ConnectToDB"%>
+<%@ page import="org.bson.Document"%>
+<%@ page import="java.util.*"%>
+<%@ page import="java.util.LinkedList"%>
+<%@ page import="java.text.*"%>
+<%@ page import="com.google.gson.*"%>
 
 <%
-	Gson gsonObj = new Gson();
-	Map<Object, Object> map = null;
-	List<Map<Object, Object>> list = new ArrayList<Map<Object, Object>>();
-	String dataPoints = null;
+	Gson areaGsonObj = new Gson();
+	Gson pieGsonObj = new Gson();
+	Gson barGsonObj = new Gson();
+	
+	Map<Object, Object> areaMap = null;
+	Map<Object, Object> pieMap = null;
+	Map<Object, Object> barMap = null;
+	
+	List<Map<Object, Object>> areaList = new ArrayList<Map<Object, Object>>();
+	List<Map<Object, Object>> pieList = new ArrayList<Map<Object, Object>>();
+	List<Map<Object, Object>> barList = new ArrayList<Map<Object, Object>>();
+
+	String areaDataPoints = null;
+	String pieDataPoints = null;
+	String barDataPoints = null;
 
 	try {
-		//Class.forName("com.mysql.jdbc.Driver");
 		String db_name = ConnectToDB.getCrime_db_name();
 		String db_collection_name = ConnectToDB.getCrime_collection_name();
-		
+
 		// Get the mongodb connection
-		MongoDatabase db = ConnectToDB.getConnection().getDatabase(db_name);
+		MongoClient curConnection = ConnectToDB.getConnection();
+		MongoDatabase db = curConnection.getDatabase(db_name);
 
-		// Get the mongodb collection.
-		MongoCollection<Document> collection = db.getCollection(db_collection_name);
-		
-		FindIterable<Document> result = collection.find();
-		// Use cursor iterator
-		MongoCursor<Document> cursor = result.iterator();
-		
-		// Iterate records
-		while (cursor.hasNext()) {
-			Document document = cursor.next();
-			xVal = document.get("dateTime").toString();
-			yVal = document.get("_id").toString();
+		System.out.println("Connected to database successfully");
 
-			map = new HashMap<Object, Object>();
-			map.put("dateTime", Double.parseDouble(xVal));
-			map.put("_id", Double.parseDouble(yVal));
-			list.add(map);
-			
-            dataPoints = gsonObj.toJson(list);
+		MongoCollection<Document> collection = db.getCollection("crime_records");
+
+		// FIRST AREA CHART
+		List<Object> substrList = Arrays.asList(new Object[]{"$dateTime", 0, 7});
+		DBObject monthProjection = new BasicDBObject("$substr", substrList);
+		BasicDBObject groupFields = new BasicDBObject("_id", 0);
+
+		groupFields.put("_id", monthProjection);
+		groupFields.put("countByMonth", new BasicDBObject("$sum", 1));
+		BasicDBObject group = new BasicDBObject("$group", groupFields);
+		BasicDBObject sort = new BasicDBObject();
+		sort.put("_id", -1);
+		BasicDBObject orderby = new BasicDBObject("$sort", sort);
+
+		List<BasicDBObject> operationList = new LinkedList<BasicDBObject>();
+		operationList.add(group);
+		operationList.add(orderby);
+
+		AggregateIterable<Document> groupByDateDoc = collection.aggregate(operationList);
+
+		for (Document doc : groupByDateDoc) {
+			String date = doc.get("_id").toString();
+			System.out.println("month: " + date);
+			int countByMonth = doc.getInteger("countByMonth");
+			System.out.println("count: " + countByMonth);
+			areaMap = new HashMap<Object, Object>();
+
+			DateFormat dateFormat = new SimpleDateFormat("yyyy-MM");
+			Date dateObj = dateFormat.parse(date);
+			long millis = dateObj.getTime();
+
+			areaMap.put("x", millis);
+			areaMap.put("y", countByMonth);
+
+			areaList.add(areaMap);
+			// parse list of object to json format
+			areaDataPoints = areaGsonObj.toJson(areaList);
+			// System.out.println(areaDataPoints);
 		}
-		
-		
-		String xVal, yVal;
 
-		ResultSet resultSet = statement.executeQuery("select * from datapoints");
+		// SECOND PIE CHART
+		long totalCount = collection.count();
+		BasicDBObject groupFields2 = new BasicDBObject("_id", 0);
 
-		while (resultSet.next()) {
-			xVal = resultSet.getString("x");
-			yVal = resultSet.getString("y");
-			map = new HashMap<Object, Object>();
-			map.put("x", Double.parseDouble(xVal));
-			map.put("y", Double.parseDouble(yVal));
-			list.add(map);
-			dataPoints = gsonObj.toJson(list);
+		groupFields2.put("_id", "$type");
+		groupFields2.put("countByType", new BasicDBObject("$sum", 1));
+		BasicDBObject group2 = new BasicDBObject("$group", groupFields2);
+
+		BasicDBObject sort2 = new BasicDBObject();
+		sort2.put("countByType", -1);
+		BasicDBObject orderby2 = new BasicDBObject("$sort", sort2);
+
+		List<BasicDBObject> operationList2 = new LinkedList<BasicDBObject>();
+		operationList2.add(group2);
+		operationList2.add(orderby2);
+
+		AggregateIterable<Document> groupByTypeDoc = collection.aggregate(operationList2);
+
+		for (Document doc : groupByTypeDoc) {
+			String type = doc.get("_id").toString();
+			System.out.println("type: " + type);
+			int countByType = doc.getInteger("countByType");
+			System.out.println("countByType: " + countByType);
+
+			pieMap = new HashMap<Object, Object>();
+
+			long percentage = 100 * countByType / totalCount;
+			pieMap.put("y", percentage);
+			pieMap.put("legendText", type);
+			pieMap.put("label", type);
+
+			pieList.add(pieMap);
+			// parse list of object to json format
+			pieDataPoints = pieGsonObj.toJson(pieList);
+			//System.out.println(pieDataPoints);
 		}
-		connection.close();
-	} catch (SQLException e) {
-		out.println(
-				"<div  style='width: 50%; margin-left: auto; margin-right: auto; margin-top: 200px;'>Could not connect to the database. Please check if you have mySQL Connector installed on the machine - if not, try installing the same.</div>");
-		dataPoints = null;
+
+		// THIRD BAR CHART
+		BasicDBObject groupFields3 = new BasicDBObject("_id", 0);
+
+		groupFields3.put("_id", "$location");
+		groupFields3.put("countByLocation", new BasicDBObject("$sum", 1));
+		BasicDBObject group3 = new BasicDBObject("$group", groupFields3);
+
+		BasicDBObject sort3 = new BasicDBObject();
+		sort3.put("countByLocation", -1);
+		BasicDBObject orderby3 = new BasicDBObject("$sort", sort3);
+		BasicDBObject limit3 = new BasicDBObject("$limit", 5);
+		
+		List<BasicDBObject> operationList3 = new LinkedList<BasicDBObject>();
+		operationList3.add(group3);
+		operationList3.add(orderby3);
+		operationList3.add(limit3);
+
+		AggregateIterable<Document> groupByLocationDoc = collection.aggregate(operationList3);
+
+		for (Document doc : groupByLocationDoc) {
+			String location = doc.get("_id").toString();
+			System.out.println("location: " + location);
+			int countByLocation = doc.getInteger("countByLocation");
+			System.out.println("countByLocation: " + countByLocation);
+
+			barMap = new HashMap<Object, Object>();
+
+			barMap.put("y", countByLocation);
+			barMap.put("label", location);
+
+			barList.add(barMap);
+			// parse list of object to json format
+			barDataPoints = barGsonObj.toJson(barList);
+			//System.out.println(pieDataPoints);
+		}
+
+	} catch (MongoException e) {
+		System.out.println("catch exception! " + e);
 	}
 %>
+
+
+
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
-
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>Harassments Dashboard</title>
+<!-- Bootstrap CSS -->
+		<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet"/>
+		<style>
+			body {
+				background-color: #fafafa;
+				font-size: 16px;
+				line-height: 1.5;
+			}
+			
+			h1,h2,h3,h4,h5,h6 {
+				font-weight: 400;	
+			}
+			
+			#header {
+				border-bottom: 5px solid #37474F;
+				color: #37474F;
+				margin-bottom: 1.5rem;
+				padding: 1rem 0;
+			}
+			
+			.card {
+				border: 0rem;
+				border-radius: 0rem;
+			}
+			
+			.card-header {
+				background-color: #37474F;
+				border-radius: 0 !important;
+				color:	white;
+				margin-bottom: 0;
+				padding:	1rem;
+			}
+
+			.card-block {
+				border: 1px solid #cccccc;	
+			}
+			
+			.shadow {
+				box-shadow: 0 6px 10px 0 rgba(0, 0, 0, 0.14),
+										0 1px 18px 0 rgba(0, 0, 0, 0.12),
+										0 3px 5px -1px rgba(0, 0, 0, 0.2);
+			}
+			
+			#areaChartContainer, #pieChartContainer, #barChartContainer {
+				height: 300px;
+				width: 100%;
+			}			
+		</style>
 
 <script type="text/javascript">
 	window.onload = function() {
-<%if (dataPoints != null) {%>
-	var chart = new CanvasJS.Chart("chartContainer", {
+
+		var chart1 = new CanvasJS.Chart("areaChartContainer", {
 			animationEnabled : true,
 			exportEnabled : true,
 			title : {
-				text : "JSP Column Chart from Database"
+				//text : "Monthly Sexual Harrasments",
+				fontSize : 22,
+				fontFamily : "Impact"
+			},
+			axisX : {
+				valueFormatString : "MMM",
+				interval : 1,
+				intervalType : "month",
+				title : "Month"
+			},
+			axisY : {
+				title : "Number of cases"
 			},
 			data : [ {
-				type : "column", //change type to bar, line, area, pie, etc
-				dataPoints :
-<%out.print(dataPoints);%>
-	} ]
+				type : "splineArea",
+				xValueType : "dateTime",
+				yValueFormatString : "#,##0 cases",
+				dataPoints : <%out.print(areaDataPoints);%>
+			} ]
 		});
-		chart.render();
-<%}%>
+
+		var chart2 = new CanvasJS.Chart("pieChartContainer", {
+			theme : "light2", // "light1", "light2", "dark1", "dark2"
+			exportEnabled : true,
+			animationEnabled : true,
+			title : {
+				//text : "Harrasments Type",
+				fontSize : 22,
+				fontFamily : "Impact"
+			},
+			legend : {
+				verticalAlign : "center",
+				horizontalAlign : "left",
+				fontSize : 14,
+				fontFamily : "Helvetica"
+			},
+			theme : "light2",
+			data : [ {
+				type : "pie",
+				//indexLabelFontFamily: "Garamond",
+				indexLabelFontSize : 14,
+				indexLabel : "{label} {y}%",
+				startAngle : 0,
+				showInLegend : true,
+				toolTipContent : "{legendText} {y}%",
+				dataPoints : <%out.print(pieDataPoints);%>
+				} ]
+		});
+		
+		var chart3 = new CanvasJS.Chart("barChartContainer", {
+			animationEnabled: true,
+			
+			title:{
+				//text:"Top 5 Cases Zipcode"
+			},
+			axisX:{
+				interval: 1
+			},
+			axisY2:{
+				interlacedColor: "rgba(1,77,101,.2)",
+				interval: 1,
+				gridColor: "rgba(1,77,101,.1)",
+				title: "Number of Cases"
+			},
+			data: [{
+				type: "bar",
+				axisYType: "secondary",
+				color: "#014D65",
+				dataPoints: <%out.print(barDataPoints);%>
+			}]
+		});
+		
+		chart1.render();
+		chart2.render();
+		chart3.render();
 	}
 </script>
+<script type="text/javascript"
+	src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
+
 </head>
-
 <body>
-	<h2>Harassments Data Dashboard</h2>
-	<h4>Hello Police Officer!</h4>
+		<div class="container">
+			<h2 id="header">
+				<strong>Sexual Harassments Data Dashboard</strong>	
+			</h2>
+				<div align="left"><form method="post" action="listRecords">
+					<button id="submit_btn" class="btn btn-secondary btn-sm">View or search full records
+					</button></form></div>			
 
-	<div id="chartContainer" style="height: 370px; width: 100%;"></div>
-	<script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
+			
+			<div class="row m-b-1">
+				<div class="col-xs-12">
+					<div class="card shadow">
+						<h4 class="card-header">Monthly Sexual Harassments</h4>
+						<div class="card-block">
+							<div id="areaChartContainer"></div>
+						</div>
+					</div>
+				</div>
+			</div> <!-- row -->
+			<div class="row m-b-1">
+				<div class="col-md-6">
+					<div class="card shadow">
+						<h4 class="card-header">Harassments Type</h4>
+						<div class="card-block">
+							<div id="pieChartContainer"></div>
+						</div>
+					</div>
+				</div>
 
-	<a href="<c:url value="listRecords"></c:url>">To full list Records</a>
+				<div class="col-md-6">
+					<div class="card shadow">
+						<h4 class="card-header">Top 5 Cases Zipcode</h4>
+						<div class="card-block">
+							<div id="barChartContainer"></div>
+						</div>
+					</div>
+				</div>
+			</div> <!-- row -->
+		</div> <!-- container -->
+	</body>
 
-</body>
 </html>

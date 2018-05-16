@@ -70,14 +70,16 @@
 						placeholder="pick from drop down calendar" required>
 				</div>
 			</div>
-		
+	
+	
 			<div class="form-group row">
-				<label class="col-sm-4 col-form-label font-weight-bold">Happened Area</label>
+				<label class="col-sm-4 col-form-label font-weight-bold">Location</label>
 				<div class="col-sm-8">
 					<input name="location" type="text" class="form-control"
-						placeholder="In zipcode, ex : 60605">
+						placeholder="Where did it happend">
 				</div>
 			</div>
+
 
 
 			<fieldset class="form-group">
