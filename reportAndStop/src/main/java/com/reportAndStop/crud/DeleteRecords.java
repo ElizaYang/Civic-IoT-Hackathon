@@ -1,18 +1,11 @@
 package com.reportAndStop.crud;
 
 import com.mongodb.MongoClient;
-import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
-import com.mongodb.client.MongoCursor;
 import com.mongodb.client.MongoDatabase;
-import com.reportAndStop.bean.Record;
 import com.reportAndStop.mongoDB.ConnectToDB;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -31,9 +24,6 @@ public class DeleteRecords extends HttpServlet{
 	@Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException{
-		
-		// array list store all queried records
-		List<Record> list = new ArrayList<Record>();
 		
 		String db_name = ConnectToDB.getCrime_db_name();
 		String db_collection_name = ConnectToDB.getCrime_collection_name();
