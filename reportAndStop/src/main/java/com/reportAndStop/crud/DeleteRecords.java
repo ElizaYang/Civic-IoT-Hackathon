@@ -1,6 +1,5 @@
 package com.reportAndStop.crud;
 
-import com.mongodb.MongoClient;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import com.reportAndStop.mongoDB.ConnectToDB;
@@ -25,18 +24,14 @@ public class DeleteRecords extends HttpServlet{
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException{
 		
-		String db_name = ConnectToDB.getCrime_db_name();
+		// Get collection name	
 		String db_collection_name = ConnectToDB.getCrime_collection_name();
-
-		// Get the mongodb connection
-		MongoClient curConnection = ConnectToDB.getConnection();
-		MongoDatabase db = curConnection.getDatabase(db_name);
-		
+		// Get the mongodb database
+		MongoDatabase db =  ConnectToDB.getDBConnection();		
 		// Get the mongodb collection.
 		MongoCollection<Document> collection = db.getCollection(db_collection_name);
-		// Get all documents in the collection
 		
-        
+		
 		String[] selectedIds = request.getParameterValues("_id");
 		System.out.println("selectedIds numbers: " + selectedIds.length);
 		for (int i = 0; i < selectedIds.length; i++) {
@@ -45,16 +40,14 @@ public class DeleteRecords extends HttpServlet{
 			ObjectId objectId = new ObjectId(id);
 			
 			try {
-				collection.deleteOne(new Document("_id",objectId));	            
-				curConnection.close();
+				collection.deleteOne(new Document("_id",objectId));	     
+				ConnectToDB.closeMongoClient();
 	        } catch (Exception e) {
 	        	System.out.println("Error: " + e);
 	        }
 		}		
 		
 		response.sendRedirect(request.getContextPath()+"/listRecords");
-//		RequestDispatcher view = request.getRequestDispatcher("/listRecords.jsp");
-//        view.forward(request, response);
 	}
             
 

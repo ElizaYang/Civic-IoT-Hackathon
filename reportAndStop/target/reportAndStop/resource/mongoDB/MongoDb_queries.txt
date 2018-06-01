@@ -1,0 +1,12 @@
+##### COMMANDS TO CREATE A SAMPLE DATABASE & COLLECTION #####
+> use officer_records
+
+> db.officerLoginInfo.insertMany( [
+	{ _id: 1, "id" : "admin", "pwd" : "admin123" },
+	{ _id: 2, "id" : "officerA", "pwd" : "officerA123" },
+	{ _id: 3, "id" : "officerB", "pwd" : "officerB123" },
+	{ _id: 4, "id" : "renzo", "pwd" : "renzo123" },
+	{ _id: 5, "id" : "eliza", "pwd" : "eliza123" }
+] )
+
+> db.officerLoginInfo.find()

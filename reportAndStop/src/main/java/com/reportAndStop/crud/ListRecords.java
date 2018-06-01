@@ -1,6 +1,5 @@
 package com.reportAndStop.crud;
 
-import com.mongodb.MongoClient;
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoCursor;
@@ -34,13 +33,11 @@ public class ListRecords extends HttpServlet{
 		
 		// array list store all queried records
 		List<Record> list = new ArrayList<Record>();
-		
-		String db_name = ConnectToDB.getCrime_db_name();
-		String db_collection_name = ConnectToDB.getCrime_collection_name();
 
-		// Get the mongodb connection
-		MongoClient curConnection = ConnectToDB.getConnection();
-		MongoDatabase db = curConnection.getDatabase(db_name);
+		// Get collection name	
+		String db_collection_name = ConnectToDB.getCrime_collection_name();
+		// Get the mongodb database
+		MongoDatabase db =  ConnectToDB.getDBConnection();		
 		
 		// Get the mongodb collection.
 		MongoCollection<Document> collection = db.getCollection(db_collection_name);
@@ -76,8 +73,7 @@ public class ListRecords extends HttpServlet{
 		// sent back to request page
 		request.setAttribute("records", list);
 		// close connection to db
-		curConnection.close();
-		
+		ConnectToDB.closeMongoClient();
 		RequestDispatcher view = request.getRequestDispatcher("/listRecords.jsp");
         view.forward(request, response);
 	}

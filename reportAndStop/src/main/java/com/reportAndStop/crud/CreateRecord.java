@@ -44,11 +44,10 @@ public class CreateRecord extends HttpServlet {
 		String suspSkinTone = req.getParameter("suspSkinTone");
 		String suspChar = req.getParameter("suspChar");
 
-		String db_name = ConnectToDB.getCrime_db_name();
 		String db_collection_name = ConnectToDB.getCrime_collection_name();
 
 		// Get the mongodb connection
-		MongoDatabase db = ConnectToDB.getConnection().getDatabase(db_name);
+		MongoDatabase db = ConnectToDB.getDBConnection();
 
 		// Get the mongodb collection.
 		MongoCollection<Document> collection = db.getCollection(db_collection_name);

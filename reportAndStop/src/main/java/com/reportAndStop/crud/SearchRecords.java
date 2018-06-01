@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.mongodb.BasicDBObject;
-import com.mongodb.MongoClient;
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
@@ -70,16 +69,11 @@ public class SearchRecords extends HttpServlet {
 				objList.add(new BasicDBObject("suspRace", race));
 			}
 			
-			String db_name = ConnectToDB.getCrime_db_name();
 			String db_collection_name = ConnectToDB.getCrime_collection_name();
-
-			// Get the mongodb connection
-			MongoClient curConnection = ConnectToDB.getConnection();
-			MongoDatabase db = curConnection.getDatabase(db_name);
-			
+			// Get the mongodb database
+			MongoDatabase db =  ConnectToDB.getDBConnection();		
 			// Get the mongodb collection.
 			MongoCollection<Document> collection = db.getCollection(db_collection_name);
-			
 		
 			BasicDBObject whereQuery = new BasicDBObject();
 			// Pipeline the query criteria
@@ -112,7 +106,7 @@ public class SearchRecords extends HttpServlet {
 			// sent back to request page
 			req.setAttribute("records", filterList);
 			// close connection to db
-			curConnection.close();
+			ConnectToDB.closeMongoClient();
 			RequestDispatcher view = req.getRequestDispatcher("/listRecords.jsp");
 	        view.forward(req, resp);			
 		}		
