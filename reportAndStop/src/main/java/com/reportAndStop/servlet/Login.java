@@ -34,8 +34,7 @@ public class Login extends HttpServlet {
 			if(isUserFound) {		
 				// if found, direct to new page
 				req.getRequestDispatcher("/policeDashboard.jsp").forward(req, resp);
-				//resp.sendRedirect(req.getContextPath()+"/listRecords");				
-//				req.getRequestDispatcher("/listRecords.jsp").forward(req, resp);
+
 			} else {
 				req.setAttribute("error_message", "You are not an authorised user. Please check with administrator.");
 				req.getRequestDispatcher("/welcomePage.jsp").forward(req, resp);

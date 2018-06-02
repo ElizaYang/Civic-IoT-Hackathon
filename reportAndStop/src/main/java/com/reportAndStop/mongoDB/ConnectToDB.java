@@ -8,9 +8,9 @@ public class ConnectToDB {
 	
 	static MongoClient mongoClient;
 	
-	// Method to make a connection to the mongodb server listening on a default port
+	// Method to make a connection to the mongodb server 
 	public static MongoDatabase getDBConnection() {
-		
+		// connect to cloud
 		MongoClientURI uri = new MongoClientURI("mongodb://se452admin:se452admin@ds133241.mlab.com:33241/heroku_p6rw9bjd");
 		mongoClient = new MongoClient(uri);
 
@@ -23,15 +23,10 @@ public class ConnectToDB {
 		mongoClient.close();
     }
 	
-//	public static String getCrime_db_name() {
-//		return "crimeDB";
-//	}
 	public static String getCrime_collection_name() {
 		return "crime_records";
 	}
-//	public static String getPolice_db_name() {
-//		return "officer_records";
-//	}
+
 	public static String getPolice_collection_name() {
 		return "officerLoginInfo";
 	}

@@ -138,10 +138,10 @@
 					<th>Suspect Marks</th>
 					<th>Victim Contact</th>
 					<th>Invest</th>
-					<th>Delete</th>
+					<th>Delete/Update</th>
 				</tr>
 				</thead>
-				
+				<!-- content -->
 				<c:forEach items="${records}" var="record" varStatus="status">
 					<tr>					
 						<th scope="row">${record.id}</th>
@@ -157,8 +157,11 @@
 						<td>${record.suspChar}</td>
 						<td>${record.contact}</td>
 						<td>${record.invest}</td>
-						<td><a
+						<td>
+						<a
 							href="<c:url value="deleteRecords"><c:param name="_id" value="${record.id}"/></c:url>">Delete</a>
+						<a
+							href="<c:url value="updateRecords"><c:param name="_id" value="${record.id}"/></c:url>">Update</a>
 						</td>
 					</tr>
 				</c:forEach>
